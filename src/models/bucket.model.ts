@@ -30,4 +30,4 @@ const BucketSchema = new Schema<IBucket>({
 // Ensure bucket names are unique per user
 BucketSchema.index({ name: 1, owner: 1 }, { unique: true });
 
-export const Bucket = mongoose.model('Bucket', BucketSchema);
+export const Bucket = mongoose.model<IBucket>('Bucket', BucketSchema);
