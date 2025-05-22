@@ -3,7 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { logger } from './config';
-import { healthRoute,userRouter,authRouter } from './routes';
+import { healthRoute,userRouter,authRouter,bucketRouter } from './routes';
 
 export class App{
   public app:Express;
@@ -31,6 +31,7 @@ export class App{
   private setupRoutes(): void{
     this.app.use('/health',healthRoute);
     this.app.use('/auth',authRouter);
+    this.app.use('/buckets',bucketRouter);
     this.app.use('/user',userRouter);
   }
 }
