@@ -1,0 +1,42 @@
+{
+  "name": "cloud-storage-service",
+  "version": "1.0.0",
+  "description": "Cloud Storage Service (SCS2) is a web-based storage solution that allows users to store and retrieve files from a personal cloud-based storage space. The system implements core features of cloud storage platforms including user authentication, file management, access control, and search capabilities.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vaasu2002/Simple-Cloud-Storage.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/vaasu2002/Simple-Cloud-Storage/issues"
+  },
+  "homepage": "https://github.com/vaasu2002/Simple-Cloud-Storage#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "ioredis": "^5.6.1",
+    "mongoose": "^8.15.0",
+    "morgan": "^1.10.0",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
