@@ -29,7 +29,7 @@ export class App{
       }));
   }
   private setupRoutes(): void{
-    this.app.use('/heath',healthRoute);
+    this.app.use('/health',healthRoute);
   }
 }
 
