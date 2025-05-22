@@ -3,7 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { logger } from './config';
-import { healthRoute } from './routes';
+import { healthRoute,userRouter,authRouter } from './routes';
 
 export class App{
   public app:Express;
@@ -30,6 +30,8 @@ export class App{
   }
   private setupRoutes(): void{
     this.app.use('/health',healthRoute);
+    this.app.use('/auth',authRouter);
+    this.app.use('/user',userRouter);
   }
 }
 
