@@ -1,8 +1,6 @@
 import { Response ,Request} from 'express';
-import { Bucket } from '../models/bucket.model';
-import { BucketAccessLevel } from '../interface';
-import mongoose from 'mongoose';
 import { bucketService } from '../services';
+import {GenericApiError} from '../errors';
 
 export const createBucket = async (req: Request, res: Response) => {
   try{
@@ -31,19 +29,19 @@ export const createBucket = async (req: Request, res: Response) => {
       },
     });
   }catch(error){
-    console.error('Create bucket error:', error);
-    if(error.message==='BUCKET_ERROR1'){
-      res.status(409).json({
-        status: 'error',
-        message: 'Failed to create bucket',
+    const message = 'Failed to create bucket'
+    if(error instanceof GenericApiError){
+      res.status(error.statusCode).json({
+        success: false,
+        message: message,
         data:{
-          error: 'Bucket with name already exists with user',
+          error: error.errorExplanation,
         }
       });
     }
     res.status(500).json({
-      status: 'error',
-      message: 'Failed to create bucket',
+      success: false,
+      message: message,
       data:{
         error: 'Internal Server Error',
       }
@@ -88,16 +86,26 @@ export const getAllBucketsUserHasAccessTo = async (req: Request, res: Response) 
       },
     });
   }catch(error){
-    console.error('Get all buckets error:', error);
+    const message = 'Failed to retrieve buckets'
+    if(error instanceof GenericApiError){
+      res.status(error.statusCode).json({
+        success: false,
+        message: message,
+        data:{
+          error: error.errorExplanation,
+        }
+      });
+    }
     res.status(500).json({
-      status: 'error',
-      message: 'Failed to retrieve buckets',
-      error: (error as Error).message,
+      success: false,
+      message: message,
+      data:{
+        error: 'Internal Server Error',
+      }
     });
   }
 };
 
-// // Get a single bucket by ID
 export const getBucketById = async (req: Request, res: Response) => {
   try {
     const { bucketId } = req.params;
@@ -122,12 +130,23 @@ export const getBucketById = async (req: Request, res: Response) => {
         },
       },
     });
-  } catch (error) {
-    console.error('Get bucket by ID error:', error);
+  }catch(error){
+    const message = 'Failed to retrieve bucket'
+    if(error instanceof GenericApiError){
+      res.status(error.statusCode).json({
+        success: false,
+        message: message,
+        data:{
+          error: error.errorExplanation,
+        }
+      });
+    }
     res.status(500).json({
-      status: 'error',
-      message: 'Failed to retrieve bucket',
-      error: (error as Error).message,
+      success: false,
+      message: message,
+      data:{
+        error: 'Internal Server Error',
+      }
     });
   }
 };
