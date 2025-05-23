@@ -31,7 +31,7 @@ export class BucketRepository{
                         $in: [userId] 
                     }
                 }
-            );
+            ).populate('owner', 'username email');
             return buckets;
         }catch(err){
             throw err;
