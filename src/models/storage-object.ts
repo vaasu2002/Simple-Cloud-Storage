@@ -104,4 +104,4 @@ StorageObjectSchema.index({ owner: 1, contentHash: 1 });
 // search by tag
 StorageObjectSchema.index({ tags: 1 });
 
-export const StorageObject = mongoose.model('StorageObject', StorageObjectSchema);
+export const StorageObject = mongoose.model<IStorageObject>('StorageObject', StorageObjectSchema);
