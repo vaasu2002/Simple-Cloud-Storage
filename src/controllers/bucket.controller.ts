@@ -1,12 +1,8 @@
 import { Response ,Request} from 'express';
 import { Bucket } from '../models/bucket.model';
-import { StorageObject } from '../models';
-import { IAuthRequest, BucketAccessLevel } from '../interface';
+import { BucketAccessLevel } from '../interface';
 import mongoose from 'mongoose';
-import fs from 'fs';
-import path from 'path';
-import {configs} from '../config';
-import { bucketService } from '../services/bucket.service';
+import { bucketService } from '../services';
 
 export const createBucket = async (req: Request, res: Response) => {
   try{
@@ -136,7 +132,6 @@ export const getBucketById = async (req: Request, res: Response) => {
   }
 };
 
-// // Share a bucket with other users
 export const shareBucket = async (req: Request, res: Response) => {
   try {
     const { bucketId } = req.params;
@@ -162,6 +157,38 @@ export const shareBucket = async (req: Request, res: Response) => {
     res.status(500).json({
       status: 'error',
       message: 'Failed to share bucket',
+      error: (error as Error).message,
+    });
+  }
+};
+
+
+// Revoke bucket access from users
+export const revokeBucketAccess = async (req: Request, res: Response) => {
+  try {
+    const { bucketId } = req.params;
+    const { userIdToRevoke } = req.body;
+    const userId = req.user?._id;
+    
+    const bucket = await bucketService.revokeBucketAccessFromUser(bucketId,userIdToRevoke,userId);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Access revoked successfully',
+      data: {
+        bucket: {
+          id: bucket._id,
+          name: bucket.name,
+          accessLevel: bucket.accessLevel,
+          sharedWith: bucket.sharedWith,
+        },
+      },
+    });
+  } catch (error) {
+    console.error('Revoke bucket access error:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to revoke access',
       error: (error as Error).message,
     });
   }
