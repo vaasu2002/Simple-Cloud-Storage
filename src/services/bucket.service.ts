@@ -4,7 +4,7 @@ import {
     DTOCreateBucketData
 } from '../dtos';
 import mongoose from 'mongoose';
-import { BucketAccessLevel } from '../interface';
+import { BucketAccessLevel, IBucket } from '../interface';
 
 class BucketService{
     private bucketRepository:BucketRepository;
@@ -111,6 +111,38 @@ class BucketService{
         }catch(err){
             throw err;
         }
+    }
+    public async revokeBucketAccessFromUser(bucketId:string,userIdToRevoke:string,userId:string){
+        try{
+            if(!this.validateBucketId(bucketId)){
+                throw new Error('BUCKET_ERROR2');
+            };
+            const bucket = await this.bucketRepository.findBucketById(bucketId);
+            if(!bucket){
+                throw new Error('BUCKET_ERROR3');
+            }
+            if(!this.isOwner(bucket,userId)){
+                throw new Error('You do not have permission to revoke access to this bucket');
+            }
+            // removing the user from shared array
+            if(bucket.sharedWith && bucket.sharedWith.length > 0){
+                bucket.sharedWith = bucket.sharedWith.filter(
+                    id => id.toString() !== userIdToRevoke
+                ) as any[];
+            }
+
+            if(!bucket.sharedWith || bucket.sharedWith.length === 0){
+                bucket.accessLevel = BucketAccessLevel.PRIVATE;
+            }
+            await bucket.save();
+            return bucket;
+        }catch(err){
+            throw err;
+        }
+
+    }
+    private isOwner(bucket:IBucket,userId):boolean{
+        return bucket.owner.toString() === userId.toString();
     }
     private validateBucketId(bucketId:string):boolean{
         return mongoose.Types.ObjectId.isValid(bucketId);
