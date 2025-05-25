@@ -1,5 +1,5 @@
 export interface IObjectVersion {
-    versionId: string;
+    versionId: number;
     storageKey: string;
     size: number;
     createdAt: Date;
