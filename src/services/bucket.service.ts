@@ -1,17 +1,17 @@
 import mongoose from 'mongoose';
 import { Bucket, StorageObject } from '../models';
-import { BucketRepository, StorageObjectRepository } from '../repositories';
+import { BucketRepository, ObjectStorageRepository } from '../repositories';
 import { DTOCreateBucketData } from '../dtos';
 import { BucketAccessLevel, IBucket } from '../interface';
 import {BadRequestError} from '../errors';
 
 class BucketService {
     private bucketRepository: BucketRepository;
-    private storageObjectRepository: StorageObjectRepository;
+    private objectStorageRepository: ObjectStorageRepository;
 
     constructor() {
         this.bucketRepository = new BucketRepository(Bucket);
-        this.storageObjectRepository = new StorageObjectRepository(StorageObject);
+        this.objectStorageRepository = new ObjectStorageRepository(StorageObject);
     }
 
     public async createBucket(data: DTOCreateBucketData): Promise<IBucket> {
@@ -61,8 +61,8 @@ class BucketService {
             if(!isOwner && !isShared && !isPublic) throw new Error('BUCKET_ERROR4');
 
             const [objectCount, totalSizeAgg] = await Promise.all([
-                this.storageObjectRepository.getCountOfAllObjectsInBucket(bucketId),
-                this.storageObjectRepository.getTotalStorageUsedInBucket(bucketId),
+                this.objectStorageRepository.getCountOfAllObjectsInBucket(bucketId),
+                this.objectStorageRepository.getTotalStorageUsedInBucket(bucketId),
             ]);
 
             const totalSize = totalSizeAgg.length > 0 ? totalSizeAgg[0].total : 0;
