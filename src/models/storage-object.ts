@@ -7,9 +7,10 @@ import {
 
 const ObjectVersionSchema = new Schema<IObjectVersion>({
     versionId: {
-        type: String,
+        type: Number,
         required: true,
     },
+    // the logical indentifier 
     storageKey: {
         type: String,
         required: true,
